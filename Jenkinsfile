@@ -1,31 +1,23 @@
-pipeline{
-    agent any
-    environment {
-        PATH = "$PATH:/usr/share/apache-maven"
+pipeline {
+  agent { label "linux" } 
+  environment {
+    STACKHAWK_API_KEY = credentials("stackhawk-api-key")
+  }
+  stages {
+    stage("Deploy site") {
+      steps {
+        sh 'cp conformancepack.tf /home/jenkins-agent'
+      }
     }
-stages {
-
-stage ('checkout') {
-steps{
-   checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Kiransai321/new123.git']]])
-}
-}
-stage('Build'){
-            steps{
-                sh 'mvn clean package'
-            }
-         }
-        stage('SonarQube analysis') {
-//    def scannerHome = tool 'SonarScanner 4.0';
-        steps{
-        withSonarQubeEnv('SonarQube-8.9.9') { 
-        // If you have configured more than one global server connection, you can specify its name
-//      sh "${scannerHome}/bin/sonar-scanner"
-        sh "mvn sonar:sonar"
+    stage("Run HawkScan Test") {
+      steps {
+        sh '''
+          docker run -v ${WORKSPACE}:/hawk:rw -t \
+            -e API_KEY=${STACKHAWK_API_KEY} \
+            -e NO_COLOR=true \
+            stackhawk/hawkscan
+        '''        
+      }
     }
-        }
-        }
-       
-    }
+  }
 }
-
