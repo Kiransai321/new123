@@ -1,0 +1,9 @@
+app:
+  applicationId: 41af3766-3bd9-471e-8541-fec51db6a467
+  host: http://54.163.195.168:8090
+  env: Development
+
+hawk:
+  startupTimeoutMinutes: 1
+  spider:
+    base: false
