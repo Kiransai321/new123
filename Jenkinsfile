@@ -7,7 +7,7 @@ stages {
 
 stage ('checkout') {
 steps{
-   checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Chalapathi-67/java-demo.git']]])
+   checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Kiransai321/new123.git']]])
 }
 }
 stage('Build'){
